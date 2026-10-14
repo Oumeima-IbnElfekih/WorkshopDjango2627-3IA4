@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator,RegexValidator
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 def validate_email(value):
     if not value:
         raise ValidationError("l'email est obligatoire")
@@ -28,7 +29,25 @@ class Utilisateur(AbstractUser):
     def save(self, *args, **kwargs):
             self.full_clean()
             super().save(*args, **kwargs)
+    @classmethod
+    def _generate_user_id(cls):
+        annee = timezone.now().strftime('%y')
+        prefixe = f"{annee}user"
 
+        dernier = (
+            cls.objects
+            .filter(user_id__startswith=prefixe)
+            .order_by('-user_id')
+            .first()
+        )
+        compteur = int(dernier.user_id[-2:]) + 1 if dernier else 0
+
+        if compteur > 99:
+            raise ValueError(
+                f"Limite de 100 utilisateurs atteinte pour l'année 20{annee}."
+            )
+
+        return f"{prefixe}{compteur:02d}"
 class Entreprise(models.Model):
     raison_sociale=models.CharField(max_length=100)
     matricule_fiscal=models.CharField(max_length=17,unique=True,
