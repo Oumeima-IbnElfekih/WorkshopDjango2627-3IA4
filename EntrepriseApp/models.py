@@ -9,7 +9,7 @@ def validate_email(value):
     if not value.endswith('@gmail.com'):
         raise ValidationError("format de l'email est invalide (@gmail.com required)")
 matricule_validator=RegexValidator(
-    regex="^\d{7}[/ -]?[A-Za-z][/ -]?[ABDNPEabdnpe][/ -]?[MPCNEmpcne][/ -]?\d{3}$"
+    regex=r"^\d{7}[/ -]?[A-Za-z][/ -]?[ABDNPEabdnpe][/ -]?[MPCNEmpcne][/ -]?\d{3}$"
                                    ,message="invalide")
 # Create your models here.
 class Utilisateur(AbstractUser):
@@ -23,12 +23,10 @@ class Utilisateur(AbstractUser):
     role=models.CharField(max_length=20,choices=[
                                 ('chargeur','Chargeur'),
                             ('transporteur','Transporteur')  ,
-                               ('admin','Administrateur')    ])
+                               ('admin','Administrateur')    ],default="chargeur")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
-    def save(self, *args, **kwargs):
-            self.full_clean()
-            super().save(*args, **kwargs)
+    
     @classmethod
     def _generate_user_id(cls):
         annee = timezone.now().strftime('%y')
@@ -48,6 +46,10 @@ class Utilisateur(AbstractUser):
             )
 
         return f"{prefixe}{compteur:02d}"
+    def save(self, *args, **kwargs):
+                self.user_id=self._generate_user_id()
+                self.full_clean()
+                super().save(*args, **kwargs)
 class Entreprise(models.Model):
     raison_sociale=models.CharField(max_length=100)
     matricule_fiscal=models.CharField(max_length=17,unique=True,
