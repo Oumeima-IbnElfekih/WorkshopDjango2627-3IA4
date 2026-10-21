@@ -3,7 +3,9 @@ from .models import Utilisateur,Entreprise
 from django.contrib.auth.admin import  UserAdmin
 from VehiculeApp.models import Vehicule
 # Register your models here.
-
+admin.site.site_title="TransConnect"
+admin.site.site_header="DashBoard Admin TransConnect"
+admin.site.index_title="Admin TransConnect"
 @admin.register(Utilisateur)
 class AdminUtilisateur(admin.ModelAdmin):
     list_display=('username','user_id','first_name','last_name','role')

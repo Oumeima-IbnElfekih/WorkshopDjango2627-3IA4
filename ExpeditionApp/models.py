@@ -28,8 +28,9 @@ class Expedition(models.Model):
                 'entreprise': "Une expédition ne peut être créée que par une entreprise de type chargeur."
             })
     def save(self, *args,**kwargs):
+        if not self.reference:
+            self.reference=self._generate_ref()
         self.full_clean()
-        self.reference=self._generate_ref()
         return super().save(*args,**kwargs)
     @classmethod
     def _generate_ref(cls):
@@ -38,7 +39,7 @@ class Expedition(models.Model):
         last_elem=(cls.objects
                    .filter(reference__startswith=prefixe)
                    .order_by('-reference').first())
-        compteur = last_elem.reference[-5:] +1 if last_elem else 1
+        compteur = int(last_elem.reference[-5:]) +1 if last_elem else 1
         if compteur > 99999:
             raise ValueError(f"limite de 99999 pour annee {annee}")
         return f"{prefixe}{compteur:05d}"
