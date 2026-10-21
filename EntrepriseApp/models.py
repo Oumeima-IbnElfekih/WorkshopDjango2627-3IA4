@@ -47,9 +47,10 @@ class Utilisateur(AbstractUser):
 
         return f"{prefixe}{compteur:02d}"
     def save(self, *args, **kwargs):
-                self.user_id=self._generate_user_id()
-                self.full_clean()
-                super().save(*args, **kwargs)
+        if not self.user_id:
+            self.user_id=self._generate_user_id()
+        self.full_clean()
+        super().save(*args, **kwargs)
 class Entreprise(models.Model):
     raison_sociale=models.CharField(max_length=100)
     matricule_fiscal=models.CharField(max_length=17,unique=True,
