@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>TransConnect - {% block titre %}
+            {% endblock %}</title>
+    </head>
+    <body>
+        <header><h1>Transconnect</h1>
+        <nav>
+            <a href="{% url 'home' %}" >Accueil</a>
+            <a href="{% url 'expeditions:liste' %}">Expéditions</a>
+            <a href="{% url 'vehicules:liste' %}">Véhicules</a>
+        </nav>
+</header>
+{% block content %} {% endblock %}
+        <footer>
+            <p>all right reserved 2026 - 3IA4</p>
+        </footer>
+    </body>
+</html>

@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block titre %} Liste expéditions {% endblock %}
+{% block content %}
 <h1> Liste des expéditions publiées</h1>
 <ul>
     {% for e in liste %}
@@ -6,3 +9,4 @@
 <p>Aucune expéditions trouvées (publiées)</p>
     {% endfor %}
 </ul>
+{% endblock %}

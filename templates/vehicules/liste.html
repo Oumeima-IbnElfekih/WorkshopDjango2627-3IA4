@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block titre %} Liste véhicules {% endblock %}
+{% block content %} 
+<h1> Liste des véhicules </h1>
+<ul>
+    {% for e in vehicules %}
+<li><a>{{e.immatriculation}}</a> <br/>
+<a href="{% url 'vehicules:update' e.pk%}">Update</a> <a href="{% url 'vehicules:delete' e.pk%}">Delete</a>
+<hr/>
+</li>
+{% empty %}
+<p>No content</p>
+    {% endfor %}
+</ul>
+ {% endblock %}
